@@ -20,3 +20,4 @@ function getDifference($file1, $file2): void
 }
 
 
+
