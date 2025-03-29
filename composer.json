@@ -4,8 +4,7 @@
         "files": [
             "src/FileService.php",
             "src/Parser.php",
-            "src/Differentiator.php",
-            "src/Helpers.php"
+            "src/Differentiator.php"
         ],
         "psr-4": {
             "Hexlet\\Code\\": "src/"

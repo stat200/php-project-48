@@ -19,3 +19,4 @@ function getDifference($file1, $file2): void
     var_dump($content2);
 }
 
+
