@@ -1,0 +1,26 @@
+{
+    "name": "hexlet/code",
+    "autoload": {
+        "files": [
+            "src/FileService.php",
+            "src/Parser.php",
+            "src/Differentiator.php",
+            "src/Helpers.php"
+        ],
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vasiliy",
+            "email": "v.bilyuga@yandex.ru"
+        }
+    ],
+    "bin": [
+        "bin/gendiff"
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
+}
