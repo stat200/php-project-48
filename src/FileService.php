@@ -2,22 +2,36 @@
 
 namespace GenDiff\FileService;
 
-function isReadable(string $file): bool
+/**
+ * @throws \Exception
+ */
+function isReadable(string $file): void
 {
-    return file_exists($file) && is_readable($file);
+    if (is_readable($file) === false) {
+        throw new \Exception('file is not readable or doesn\'t exist: ' . $file);
+    }
 }
 
 /**
  * @throws \Exception
  */
-function getContents(string $file): string
+function getContent(string $file): string
 {
-    $contents = '';
-    if (isReadable($file)) {
-        $contents = file_get_contents($file);
-    }
+    $contents = file_get_contents($file);
     if ($contents === false) {
         throw new \Exception('can\'t read content from file');
     }
     return $contents;
+}
+
+/**
+ * @throws \Exception
+ */
+function getPath(string $file): string
+{
+    $path = realpath($file);
+    if ($path === false) {
+        throw new \Exception('can\'t create path');
+    }
+    return $path;
 }

@@ -3,18 +3,23 @@
 namespace Differentiator;
 
 use function Gendiff\Parser\parseJson;
-use function GenDiff\FileService\getContents;
+use function GenDiff\FileService\getContent;
+use function Gendiff\FileService\isReadable;
+use function GenDiff\FileService\getPath;
 
 /**
- * @throws \JsonException
  * @throws \Exception
  */
-function genDiff($pathToFile1, $pathToFile2): string
+function genDiff($pathToFile1, $pathToFile2): ?string
 {
     $diff = [];
-
-    $content1 = getContent($pathToFile1);
-    $content2 = getContent($pathToFile2);
+    try {
+        $contents = getContents($pathToFile1, $pathToFile2);
+    } catch (\Exception $e) {
+        echo $e->getMessage();
+        return null;
+    };
+    [$content1, $content2] = [...$contents];
     $intersect = array_intersect_assoc($content1, $content2);
     $diff1 = array_diff_assoc($content1, $content2);
     $diff2 = array_diff_assoc($content2, $content1);
@@ -28,23 +33,25 @@ function genDiff($pathToFile1, $pathToFile2): string
         }
 
         if (array_key_exists($key, $diff1)) {
-            $diff["-{$key}"] = $diff1[$key];
+            $diff["- {$key}"] = $diff1[$key];
         }
 
         if (array_key_exists($key, $diff2)) {
-            $diff["+{$key}"] = $diff2[$key];
+            $diff["+ {$key}"] = $diff2[$key];
         }
     };
 
     return json_encode($diff);
 }
 
-/**
- * @throws \JsonException
- * @throws \Exception
- */
-function getContent($path): array
+function getContents(string ...$paths): array
 {
-    $file = realpath($path);
-    return parseJson(getContents($file));
+    return array_map(
+        function ($path) {
+            $realPath = getPath($path);
+            isReadable($realPath);
+            return parseJson(getContent($realPath));
+        },
+        $paths
+    );
 }
