@@ -5,7 +5,15 @@ namespace Gendiff\Parser;
 use JsonException;
 
 /**
+ * ParseJson
+ *
+ * Parse json with fixed params
+ *
+ * @param string $jsonString json string
+ *
  * @throws JsonException
+ *
+ * @return array
  */
 function parseJson(string $jsonString): array
 {
