@@ -2,20 +2,16 @@
 
 namespace Gendiff\Parser;
 
-use JsonException;
-
-/**
- * ParseJson
- *
- * Parse json with fixed params
- *
- * @param string $jsonString json string
- *
- * @throws JsonException
- *
- * @return array
- */
-function parseJson(string $jsonString): array
+function getParser(string $parserType): callable
 {
-    return json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
+    return parsers()[$parserType];
+}
+
+function parsers(): array
+{
+    return [
+        'json' => function ($jsonString) {
+            return json_decode($jsonString, true, 2, JSON_THROW_ON_ERROR);
+        }
+    ];
 }
