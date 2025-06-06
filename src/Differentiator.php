@@ -3,20 +3,20 @@
 namespace Differentiator;
 
 use function GenDiff\Encoder\getEncoder;
-use function Gendiff\Parser\getParser;
+use function Gendiff\Parsers\getParser;
 use function GenDiff\FileService\getContent;
 use function Gendiff\FileService\isReadable;
 use function GenDiff\FileService\getPath;
+use function GenDiff\FileService\getContentType;
 
-const CONTENT_TYPES = ['json'];
 /**
  * @throws \Exception
  */
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
     $diff = [];
-
-    $contents = getContents(CONTENT_TYPES[0], $pathToFile1, $pathToFile2);
+    $contentType = getContentType($pathToFile1);
+    $contents = getContents($contentType, $pathToFile1, $pathToFile2);
     [$content1, $content2] = [...$contents];
     $intersect = array_intersect_assoc($content1, $content2);
     $diff1 = array_diff_assoc($content1, $content2);
@@ -39,7 +39,7 @@ function genDiff(string $pathToFile1, string $pathToFile2): string
         }
     };
 
-    return getEncoder(CONTENT_TYPES[0])($diff);
+    return getEncoder('json')($diff);
 }
 
 function getContents(string $parser, string ...$paths): array

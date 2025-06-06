@@ -5,24 +5,15 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 
 use function Differentiator\genDiff;
+use function Differentiator\getContents;
 
 class GendiffTest extends TestCase
 {
-    private string $pathFile1;
-    private string $pathFile2;
+    private string $expected;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->pathFile1 = 'tests/fixtures/file1.json';
-        $this->pathFile2 = 'tests/fixtures/file2.json';
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    public function testGendiff(): void
-    {
-        $expected = '{
+        $this->expected = '{
         "- follow":false,
         "host":"hexlet.io",
         "- proxy":"123.234.53.22",
@@ -30,7 +21,46 @@ class GendiffTest extends TestCase
         "+ timeout":20,
         "+ verbose":true
         }';
-        $result = genDiff($this->pathFile1, $this->pathFile2);
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function testGendiffJsonFormat(): void
+    {
+        $pathFileJson1 = 'tests/fixtures/file1.json';
+        $pathFileJson2 = 'tests/fixtures/file2.json';
+        $result = genDiff($pathFileJson1, $pathFileJson2);
+        $this->assertJsonStringEqualsJsonString($this->expected, $result);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testGendiffYamlFormat(): void
+    {
+        $pathFileYaml1 = 'tests/fixtures/file1.yaml';
+        $pathFileYaml2 = 'tests/fixtures/file2.yaml';
+        $result = genDiff($pathFileYaml1, $pathFileYaml2);
+        $this->assertJsonStringEqualsJsonString($this->expected, $result);
+    }
+
+    public function testGetContentsIsArray(): void
+    {
+        $expected = [
+          ['host' => "hexlet.io",
+              'timeout' => 50,
+              'proxy' => "123.234.53.22",
+              'follow' => false
+          ],
+          ['timeout' => 20,
+              'verbose' => true,
+              'host' => "hexlet.io"
+          ],
+        ];
+        $pathFileJson1 = 'tests/fixtures/file1.json';
+        $pathFileJson2 = 'tests/fixtures/file2.json';
+        $result = getContents('json', $pathFileJson1, $pathFileJson2);
+        $this->assertEquals($result, $expected);
     }
 }

@@ -2,6 +2,12 @@
 
 namespace GenDiff\FileService;
 
+const FILES_TYPES = [
+    'json' => 'json',
+    'yaml' => 'yaml',
+    'yml' => 'yaml',
+];
+
 /**
  * @throws \Exception
  */
@@ -17,8 +23,8 @@ function isReadable(string $file): void
  */
 function getContent(string $file): string
 {
-    $contents = file_get_contents($file);
-    if ($contents === false) {
+    $contents = @file_get_contents($file);
+    if ((bool) $contents === false) {
         throw new \Exception('can\'t read content from file');
     }
     return $contents;
@@ -34,4 +40,12 @@ function getPath(string $file): string
         throw new \Exception('can\'t create path');
     }
     return $path;
+}
+function getContentType(string $pathToFile): string
+{
+    $fileType = pathinfo($pathToFile, PATHINFO_EXTENSION);
+    if (!array_key_exists($fileType, FILES_TYPES)) {
+        throw new \Exception('file type is not supported');
+    }
+    return FILES_TYPES[$fileType];
 }

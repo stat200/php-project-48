@@ -1,6 +1,8 @@
 <?php
 
-namespace Gendiff\Parser;
+namespace Gendiff\Parsers;
+
+use Symfony\Component\Yaml\Yaml;
 
 function getParser(string $parserType): callable
 {
@@ -12,6 +14,9 @@ function parsers(): array
     return [
         'json' => function ($jsonString) {
             return json_decode($jsonString, true, 2, JSON_THROW_ON_ERROR);
+        },
+        'yaml' => function ($yamlString) {
+            return Yaml::parse($yamlString);
         }
     ];
 }
