@@ -30,19 +30,19 @@ class ConfigsTest extends TestCase
 
     public function testGetParamDefault(): void
     {
-         $parser = getParam('parser', $this->stub);
+         $parser = getParam('parser', 'test', $this->stub);
          $this->assertEquals('json', $parser);
 
-         $formatter = getParam('formatter', $this->stub);
+         $formatter = getParam('formatter', 'test', $this->stub);
          $this->assertEquals('stylish', $formatter);
     }
 
     public function testGetParam(): void
     {
-        $parser = getParam('parser', $this->stub, 'yaml');
+        $parser = getParam('parser', 'yaml', $this->stub);
         $this->assertEquals('yaml', $parser);
 
-        $formatter = getParam('formatter', $this->stub, 'json');
+        $formatter = getParam('formatter', 'json', $this->stub);
         $this->assertEquals('json', $formatter);
     }
 

@@ -41,11 +41,7 @@ function getStatusSign(?string $status, ?bool $flagIsOld = null): string
                 return '+';
             }
 
-            if (is_null($flagIsOld)) {
-                throw new AstRuntimeException();
-            };
-
-            break;
+            throw new AstRuntimeException();
 
         default:
             return ' ';

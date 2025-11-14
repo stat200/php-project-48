@@ -1,15 +1,16 @@
 <?php
+
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+
 use function GenDiff\Validators\validateContentTypes;
 
 class ValidatorsTest extends TestCase
 {
-    public function testValidateContentTypes():void
+    public function testValidateContentTypes(): void
     {
         $result = validateContentTypes(['text/html', 'image/png']);
-        $this->assertIsArray($result);
         $this->assertFalse($result['ok']);
         $this->assertNotEmpty($result['errors']);
 

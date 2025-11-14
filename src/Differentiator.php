@@ -18,7 +18,7 @@ use function GenDiff\Services\getContents;
 /**
  * @throws \Exception
  */
-function genDiff(...$pathsToFiles): string
+function genDiff(string ...$pathsToFiles): string
 {
     $mimes = getMimes($pathsToFiles);
     $validatedResult = validateContentTypes($mimes);
@@ -27,7 +27,7 @@ function genDiff(...$pathsToFiles): string
     }
 
     $contentType = getContentFormat($mimes[0]);
-    $parserType = getParam('parser', null, $contentType);
+    $parserType = getParam('parser', $contentType, null);
     $parser = getParser($parserType);
     $pathsToFiles = getPaths($pathsToFiles);
     $contents = getContents($parser, $pathsToFiles);
@@ -35,7 +35,7 @@ function genDiff(...$pathsToFiles): string
 
     $template = getTemplate(gettype($content1));
     $ast = makeAst($template, $content1, $content2);
-    $formaterType = getParam('formatter');
+    $formaterType = getParam('formatter', 'stylish');
     $formater = getFormater($formaterType);
     return $formater($ast);
 }

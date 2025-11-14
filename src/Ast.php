@@ -17,7 +17,7 @@ function templates(): array
 {
     return [
         'array' =>
-            function ($item, string $key, ?array $children, string $status = null, bool $isOldFlag = null) {
+            function ($item, string $key, ?array $children, ?string $status = null, ?bool $isOldFlag = null) {
                 return [
                     'name' => $key,
                     'expr' => $item,

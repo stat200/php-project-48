@@ -88,8 +88,8 @@ class FileSystemTest extends TestCase
         ];
         $result = getMimes($paths);
 
-        $expectedYaml  = strtolower(trim(mime_content_type(__DIR__ . $this->fixtures . 'file1Multidimensional.yaml')));
-        $expectedJson = strtolower(trim(mime_content_type(__DIR__ . $this->fixtures . 'file1Multidimensional.json')));
+        $expectedYaml  = 'text/plain';
+        $expectedJson = 'application/json';
 
         $this->assertSame($expectedYaml, $result[10]);
         $this->assertSame($expectedJson, $result[20]);

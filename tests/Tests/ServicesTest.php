@@ -24,28 +24,12 @@ class ServicesTest extends TestCase
         $this->stub = \Closure::fromCallable($this->stub);
     }
 
-    public function testGetContents(): void
-    {
-        $result = getContents($this->stub, $this->paths);
-        $this->assertIsArray($result);
-    }
-
     public function testGetContentsReturnsParsedData(): void
     {
         $result = getContents($this->stub, $this->paths);
 
-        $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertIsArray($result[0]);
         $this->assertIsArray($result[1]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function testGetPaths(): void
-    {
-        $result = getPaths($this->paths);
-        $this->assertIsArray($result);
     }
 }

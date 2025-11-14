@@ -6,7 +6,7 @@ use Hexlet\Code\exceptions\UnsupportedFormatTypeException;
 
 use function Config\getParams;
 
-function getParam(string $configType, ?callable $getParams = null, ?string $paramType = null): string
+function getParam(string $configType, string $paramType, ?callable $getParams = null): string
 {
     $getParams ??= getParams();
     $params = $getParams()[$configType];
