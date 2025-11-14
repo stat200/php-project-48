@@ -3,6 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+
 use function GenDiff\Helper\stringifyValue;
 
 class HelperTest extends TestCase

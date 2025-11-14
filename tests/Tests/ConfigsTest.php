@@ -1,8 +1,10 @@
 <?php
+
 namespace Tests;
 
 use Hexlet\Code\exceptions\UnsupportedFormatTypeException;
 use PHPUnit\Framework\TestCase;
+
 use function Config\getParams;
 use function GenDiff\Configs\getContentFormat;
 use function GenDiff\Configs\getParam;

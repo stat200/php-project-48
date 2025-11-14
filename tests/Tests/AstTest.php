@@ -1,7 +1,9 @@
 <?php
+
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+
 use function GenDiff\Ast\getTemplate;
 use function GenDiff\Ast\makeAst;
 
