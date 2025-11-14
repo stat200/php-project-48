@@ -6,14 +6,13 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Exception\ParseException;
 
 use function Gendiff\Parsers\getParser;
-use function Gendiff\Parsers\parsers;
 
 class ParsersTest extends TestCase
 {
     public function testParseJsonException(): void
     {
         $this->expectException(\JsonException::class);
-        getParser('json')('...');
+        getParser('json')("\xB1\x31");
     }
     public function testParseYamlException(): void
     {

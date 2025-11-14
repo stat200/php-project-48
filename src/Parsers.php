@@ -13,7 +13,7 @@ function parsers(): array
 {
     return [
         'json' => function ($jsonString) {
-            return json_decode($jsonString, true, 2, JSON_THROW_ON_ERROR);
+            return json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
         },
         'yaml' => function ($yamlString) {
             return Yaml::parse($yamlString);

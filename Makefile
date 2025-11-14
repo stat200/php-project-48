@@ -5,6 +5,7 @@ console:
 	composer exec --verbose psysh
 
 lint:
+	composer exec --verbose phpcs -- --standard=PSR12 src bin
 	composer exec --verbose phpcs -- src tests
 	composer exec --verbose phpstan
 
