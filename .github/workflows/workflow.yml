@@ -36,6 +36,8 @@ jobs:
         run: make test-coverage
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          login: ${{ secrets.SONAR_TOKEN }}
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
