@@ -3,15 +3,19 @@
     "autoload": {
         "files": [
             "src/Services.php",
-            "src/Parsers.php",
             "src/Differentiator.php",
-            "src/Formatters.php",
-            "src/Helper.php",
+            "src/Utils/CommonUtils.php",
+            "src/Utils/FileSystemUtils.php",
             "src/Configs.php",
-            "src/config/Params.php",
             "src/Validators.php",
             "src/Ast.php",
-            "src/infrastructure/IO/FileSystem.php"
+          "src/formatters/Formatter.php",
+          "src/formatters/PlainFormat.php",
+          "src/formatters/StylishFormat.php",
+            "src/factories/FormatterFactory.php",
+            "src/factories/ParserFactory.php",
+            "src/parsers/Parsers.php",
+          "src/formatters/Formatters.php"
         ],
         "psr-4": {
             "Hexlet\\Code\\": "src/"

@@ -2,40 +2,36 @@
 
 namespace Differentiator;
 
-use Hexlet\Code\exceptions\AggregateValidationException;
+use GenDiff\Configs\ParamType;
 
-use function GenDiff\Ast\getTemplate;
 use function GenDiff\Ast\makeAst;
+use function GenDiff\Ast\templates;
+use function GenDiff\Factories\getFormatter;
 use function GenDiff\Configs\getParam;
-use function GenDiff\Infrastructure\IO\FileSystem\getMimes;
-use function GenDiff\Formater\getFormater;
 use function GenDiff\Services\getPaths;
-use function Gendiff\Parsers\getParser;
-use function GenDiff\Validators\validateContentTypes;
-use function GenDiff\Configs\getContentFormat;
+use function Gendiff\Factories\getParser;
 use function GenDiff\Services\getContents;
+use function GenDiff\Utils\getMimes;
+use function GenDiff\Utils\getParserTypeByMime;
+use function GenDiff\Validators\validateContentTypes;
 
 /**
  * @throws \Exception
  */
-function genDiff(string ...$pathsToFiles): string
+function genDiff(string $pathToFile1, string $pathToFile2, ?string $formatterType = null,): string
 {
-    $mimes = getMimes($pathsToFiles);
-    $validatedResult = validateContentTypes($mimes);
-    if (!empty($validatedResult['errors'])) {
-        throw new AggregateValidationException($validatedResult['errors']);
-    }
-
-    $contentType = getContentFormat($mimes[0]);
-    $parserType = getParam('parser', $contentType, null);
+    $pathsToFiles = [$pathToFile1, $pathToFile2];
+    $paths = getPaths($pathsToFiles);
+    $mimes = getMimes($paths);
+    validateContentTypes($mimes);
+    $mimeParserType = getParserTypeByMime($mimes[0]);
+    $parserType = getParam(ParamType::Parser, $mimeParserType);
     $parser = getParser($parserType);
-    $pathsToFiles = getPaths($pathsToFiles);
-    $contents = getContents($parser, $pathsToFiles);
+    $contents = getContents($parser, $paths);
     [$content1, $content2] = $contents;
-
-    $template = getTemplate(gettype($content1));
-    $ast = makeAst($template, $content1, $content2);
-    $formaterType = getParam('formatter', 'stylish');
-    $formater = getFormater($formaterType);
-    return $formater($ast);
+    $template = templates();
+    $ast = makeAst($content1, $content2, $template);
+    $formatterType = getParam(ParamType::Formatter, $formatterType);
+    $formatter = getFormatter($formatterType);
+    return $formatter($ast);
 }

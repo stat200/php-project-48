@@ -8,50 +8,43 @@ const STATUSES = [
     'added' => 'ADDED'
 ];
 
-function getTemplate(string $type): callable
+function templates(): callable
 {
-    return templates()[$type];
+    return function (string $key, $item, ?string $status, ?bool $isOldFlag, string $path, ?array $children) {
+        return [
+            'name' => $key,
+            'expr' => $item,
+            'status' => $status,
+            'isOld' => $isOldFlag,
+            'path' => $path,
+            'children' => $children,
+        ];
+    };
 }
 
-function templates(): array
+function makeAst(array $arr1, array $arr2, callable $template, string $parentPath = ''): array
 {
-    return [
-        'array' =>
-            function ($item, string $key, ?array $children, ?string $status = null, ?bool $isOldFlag = null) {
-                return [
-                    'name' => $key,
-                    'expr' => $item,
-                    'isOld' => $isOldFlag,
-                    'status' => $status,
-                    'children' => $children,
-                ];
-            },
-    ];
-}
-
-function makeAst(callable $template, array $array1, array $array2): array
-{
-    $acc = [];
-    $keys = array_keys(array_merge($array1, $array2));
+    $keys = array_unique(array_merge(
+        array_keys($arr1),
+        array_keys($arr2)
+    ));
     sort($keys, SORT_STRING);
+    $ast = [];
     foreach ($keys as $key) {
-        if (array_key_exists($key, $array1) && array_key_exists($key, $array2)) {
-            if (is_array($array1[$key]) && is_array($array2[$key])) {
-                $diff = makeAst($template, $array1[$key], $array2[$key]);
-                $acc[] = $template(null, $key, $diff);
-                continue;
-            }
-            if ($array1[$key] === $array2[$key]) {
-                $acc[] = $template($array1[$key], $key, null);
-            } else {
-                $acc[] = $template($array1[$key], $key, null, STATUSES['changed'], true);
-                $acc[] = $template($array2[$key], $key, null, STATUSES['changed'], false);
-            }
-        } elseif (array_key_exists($key, $array1)) {
-            $acc[] = $template($array1[$key], $key, null, STATUSES['deleted']);
+        $currentPath = $parentPath ? "{$parentPath}.{$key}" : $key;
+        if (!array_key_exists($key, $arr2)) {
+            $ast[] = $template($key, $arr1[$key], STATUSES['deleted'], null, $currentPath, null);
+        } elseif (!array_key_exists($key, $arr1)) {
+            $ast[] = $template($key, $arr2[$key], STATUSES['added'], null, $currentPath, null);
+        } elseif (is_array($arr1[$key]) && is_array($arr2[$key])) {
+            $diff = makeAst($arr1[$key], $arr2[$key], $template, $currentPath);
+            $ast[] = $template($key, null, null, null, $currentPath, $diff);
+        } elseif ($arr1[$key] !== $arr2[$key]) {
+            $ast[] = $template($key, $arr1[$key], STATUSES['changed'], true, $currentPath, null);
+            $ast[] = $template($key, $arr2[$key], STATUSES['changed'], false, $currentPath, null);
         } else {
-            $acc[] = $template($array2[$key], $key, null, STATUSES['added']);
+            $ast[] = $template($key, $arr1[$key], null, null, $currentPath, null);
         }
     }
-    return $acc;
+    return $ast;
 }
